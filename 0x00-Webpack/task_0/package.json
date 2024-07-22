@@ -16,7 +16,7 @@
     "output",
     "webpack plugins"
   ],
-  "author": "Anis SAFIA",
+  "author": "Yosra habouria",
   "license": "ISC",
   "devDependencies": {
     "webpack": "^5.50.0",
