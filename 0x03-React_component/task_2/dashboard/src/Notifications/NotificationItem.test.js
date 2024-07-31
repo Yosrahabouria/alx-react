@@ -1,35 +1,40 @@
 import React from "react";
-import { shallow } from "enzyme";
-import { getLatestNotification } from "../utils/utils";
-import Notifications from "./Notifications";
 import NotificationItem from "./NotificationItem";
+import { shallow } from "enzyme";
 
-describe("Notification tests", () => {
-  it("renders Notification component without crashing", () => {
-    const component = shallow(<Notifications />);
+describe("rendering components", () => {
+  it("renders NotificationItem component without crashing", () => {
+    const wrapper = shallow(<NotificationItem />);
 
-    expect(component).toBeDefined();
+    expect(wrapper.exists()).toBe(true);
   });
 
-  it("renders correct list items", () => {
-    const wrapper = shallow(<Notifications />);
-    expect(wrapper.find("ul").children()).toHaveLength(3);
-    expect(wrapper.find("ul").childAt(0).html()).toEqual('<li data-notification-type="default">New course available</li>');
-    expect(wrapper.find("ul").childAt(1).html()).toEqual('<li data-notification-type="urgent">New resume available</li>');
-    expect(wrapper.find("ul").childAt(2).html()).toEqual(`<li data-urgent=\"true\">${getLatestNotification()}</li>`);
+  it('renders correct html from type="default" value="test" props', () => {
+    const wrapper = shallow(<NotificationItem />);
+
+    wrapper.setProps({ type: "default", value: "test" });
+    expect(wrapper.html()).toEqual(
+      '<li data-notification-type="default">test</li>'
+    );
   });
 
-  it("renders an unordered list", () => {
-    const wrapper = shallow(<Notifications />);
-    expect(wrapper.find("ul").children()).toHaveLength(3);
-    wrapper.find("ul").forEach((node) => {
-      expect(node.equals(<NotificationItem />));
-    });
+  it('renders correct html from  html="<u>test</u>" props', () => {
+    const wrapper = shallow(<NotificationItem />);
+
+    wrapper.setProps({ html: "<u>test</u>" });
+    expect(wrapper.html()).toEqual('<li data-urgent="true"><u>test</u></li>');
   });
+});
 
-  it("renders correct text", () => {
-    const component = shallow(<Notifications />);
+describe("onclick event behaves as it should", () => {
+  it("should call console.log", () => {
+    const wrapper = shallow(<NotificationItem />);
+    const spy = jest.fn();
 
-    expect(component.find("p").prop("children")).toBe("Here is the list of notifications");
+    wrapper.setProps({ value: "test item", markAsRead: spy, id: 1 });
+    wrapper.find("li").props().onClick();
+    expect(spy).toBeCalledTimes(1);
+    expect(spy).toBeCalledWith(1);
+    spy.mockRestore();
   });
 });
