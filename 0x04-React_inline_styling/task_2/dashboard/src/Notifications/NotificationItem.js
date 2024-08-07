@@ -1,20 +1,41 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import "./Notifications.css";
+import { StyleSheet, css } from "aphrodite";
 
-class NotificationItem extends PureComponent {
+const styles = StyleSheet.create({
+  default: {
+    color: "blue",
+  },
+  urgent: {
+    color: "red",
+  },
+});
+
+class NotificationItem extends React.PureComponent {
   render() {
     const { type, value, html, markAsRead, id } = this.props;
-
     return (
-      <li
-        data-notification-type={type}
-        onClick={() => markAsRead && markAsRead(id)}
-        dangerouslySetInnerHTML={html ? { __html: html } : undefined}
-        className={type === 'urgent' ? 'urgent' : undefined}
-      >
-        {!html && value}
-      </li>
+      <React.Fragment>
+        {type && value ? (
+          <li
+            className={
+              type === "default" ? css(styles.default) : css(styles.urgent)
+            }
+            onClick={() => markAsRead(id)}
+            data-notification-type={type}
+          >
+            {value}
+          </li>
+        ) : null}
+        {html ? (
+          <li
+            className={css(styles.urgent)}
+            onClick={() => markAsRead(id)}
+            data-urgent
+            dangerouslySetInnerHTML={{ __html: html }}
+          ></li>
+        ) : null}
+      </React.Fragment>
     );
   }
 }
@@ -22,15 +43,15 @@ class NotificationItem extends PureComponent {
 NotificationItem.propTypes = {
   type: PropTypes.string.isRequired,
   value: PropTypes.string,
-  html: PropTypes.string,
-  markAsRead: PropTypes.func,
-  id: PropTypes.string.isRequired, // changed to string as IDs are usually strings
+  html: PropTypes.shape({
+    __html: PropTypes.string,
+  }),
+  markAsRead: PropTypes.func.isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 NotificationItem.defaultProps = {
-  value: '',
-  html: '',
-  markAsRead: null,
+  type: "default",
 };
 
 export default NotificationItem;
