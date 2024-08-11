@@ -1,6 +1,6 @@
-import React, { Component, PureComponent } from "react";
-import "./Notifications.css";
-import closeIcon from "../assets/close-icon.png";
+import React from "react";
+import PropTypes from "prop-types";
+import { css, StyleSheet } from 'aphrodite';
 import NotificationItem from "./NotificationItem";
 import PropTypes from "prop-types";
 import NotificationItemShape from "./NotificationItemShape";
