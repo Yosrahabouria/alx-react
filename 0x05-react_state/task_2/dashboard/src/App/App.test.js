@@ -15,6 +15,8 @@ import { StyleSheetTestUtils } from 'aphrodite';
 
 StyleSheetTestUtils.suppressStyleInjection();
 
+const loggedUser = { email: 'diahancaroll@hotmail.com', password: '12345', isLoggedIn: true };
+
 describe("<App />", () => {
   it("renders an app component without crashing", () => {
     const wrapper = shallow(<App />);
@@ -46,11 +48,12 @@ describe("<App />", () => {
     expect(wrapper.find(CourseList)).toHaveLength(0);
   });
 
-  it("checks component behavior when isLoggedIn is true", () => {
-    const wrapper = shallow(<App isLoggedIn={true} />);
-    expect(wrapper.find(Login)).toHaveLength(0);
-    expect(wrapper.find(CourseList)).toHaveLength(1);
-  });
+  it("checks component behavior when isLoggedIn === true", () => {
+   const wrapper = shallow(<App />);
+   wrapper.setState({ user: loggedUser });
+   expect(wrapper.find(Login)).toHaveLength(0);
+   expect(wrapper.find(CourseList)).toHaveLength(1);
+ });
 
   it("checks behavior of logOut", () => {
     const map = {};
@@ -84,5 +87,22 @@ describe("<App />", () => {
    wrapper.setState({ displayDrawer: true });
    wrapper.instance().handleHideDrawer();
    expect(wrapper.state().displayDrawer).toBe(false);
+ });
+
+ it("verify that the logIn function updates the state correctly", () => {
+   const wrapper = shallow(<App />);
+   wrapper.instance().logIn(loggedUser.email, loggedUser.password);
+   expect(wrapper.state().user.email).toBe('diahancaroll@hotmail.com');
+   expect(wrapper.state().user.password).toBe('12345');
+   expect(wrapper.state().user.isLoggedIn).toBe(true);
+ });
+
+ it("verify that the logOut function updates the state correctly", () => {
+   const wrapper = shallow(<App />);
+   wrapper.setState({ user: loggedUser });
+   wrapper.state().logOut();
+   expect(wrapper.state().user.email).toBe('');
+   expect(wrapper.state().user.password).toBe('');
+   expect(wrapper.state().user.isLoggedIn).toBe(false);
  });
 });
