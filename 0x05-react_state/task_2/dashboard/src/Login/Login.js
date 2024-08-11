@@ -1,6 +1,5 @@
 import React from "react";
 import { css, StyleSheet } from "aphrodite";
-import { symbol } from "prop-types";
 
 const styles = StyleSheet.create({
   bodyLogin: {
@@ -24,7 +23,6 @@ class Login extends React.Component {
     this.handleChangePassword = this.handleChangePassword.bind(this)
 
     this.state = {
-      isLoggedIn: false,
       email: '',
       password: '',
       enableSubmit: false
@@ -33,9 +31,7 @@ class Login extends React.Component {
 
   handleLoginSubmit(event){
     event.preventDefault();
-    this.setState({
-      isLoggedIn: true
-    })
+    this.props.logIn(this.state.email, this.state.password)
   }
 
   handleChangeEmail(event) {
