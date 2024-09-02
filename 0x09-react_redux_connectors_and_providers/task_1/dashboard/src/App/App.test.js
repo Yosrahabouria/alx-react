@@ -12,8 +12,8 @@ import uiReducer, { initialState } from "../reducers/uiReducer";
 const store = createStore(uiReducer, initialState);
 
 describe("<App />", () => {
-  it("mapStateToProps returns the correct object from user Login", () => {
-    let state = fromJS({
+  it("mapStateToProps returns the right object from user Login", () => {
+    const state = fromJS({
       isUserLoggedIn: true,
     });
 
@@ -21,8 +21,9 @@ describe("<App />", () => {
 
     expect(result).toEqual({ isLoggedIn: true });
   });
-  it("mapStateToProps returns the correct object from display Drawer", () => {
-    let state = fromJS({
+
+  it("should return the right object from displayDrawer", () => {
+    const state = fromJS({
       isNotificationDrawerVisible: true,
     });
 
